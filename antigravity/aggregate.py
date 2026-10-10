@@ -13,14 +13,18 @@ def main():
         'Gemini Test': os.path.join(base, 'gemini_tester', 'test_main.py'),
     }
 
-    print('=== Antigravity Summary ===')
-    for name, path in files.items():
-        print(f'--- {name} ---')
-        if os.path.exists(path):
-            print(read_file(path))
-        else:
-            print('File not found')
-        print()
+    summary_path = os.path.join(base, 'antigravity', 'summary.md')
+    with open(summary_path, 'w', encoding='utf-8') as out:
+        out.write('# Antigravity Summary\n\n')
+        for name, path in files.items():
+            out.write(f'## {name}\n')
+            if os.path.exists(path):
+                out.write(read_file(path) + '\n\n')
+            else:
+                out.write('File not found\n\n')
+
+    print('Summary generated at', summary_path)
+
 
 if __name__ == '__main__':
     main()

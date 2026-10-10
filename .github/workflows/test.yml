@@ -19,4 +19,5 @@ jobs:
 
       - name: Run tests
         run: python -m unittest discover gemini_tester
-
+      - name: Run Antigravity Summary
+        run: python antigravity/aggregate.py
