@@ -1,0 +1,26 @@
+[Unit]
+Description=IT-quanlytaisan - Quan ly tai san noi bo
+After=network-online.target mysql.service
+Wants=network-online.target mysql.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/it-quanlytaisan
+EnvironmentFile=/opt/it-quanlytaisan/.env
+Environment=NODE_ENV=production
+Environment=PORT=3000
+ExecStart=/usr/bin/env pnpm start
+Restart=always
+RestartSec=5
+User=itqlts
+Group=itqlts
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/it-quanlytaisan
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, sans-serif;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.35rem;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+}
+
+:root {
+  --background: #f4f7f7;
+  --foreground: #18333b;
+  --card: #ffffff;
+  --card-foreground: #18333b;
+  --muted: #edf2f1;
+  --muted-foreground: #708087;
+  --border: #dfe8e6;
+  --input: #dfe8e6;
+  --ring: #16a58c;
+  --primary: #087f72;
+  --primary-foreground: #f4fffc;
+}
+
+@layer base {
+  * { @apply border-border outline-ring/30; }
+  html { background: var(--background); min-width: 320px; }
+  body { @apply bg-background text-foreground font-sans antialiased; margin: 0; min-width: 0; overflow-x: hidden; }
+  #root { min-height: 100vh; width: 100%; min-width: 0; }
+  button, input, select, textarea { font: inherit; }
+  button:not(:disabled), [role="button"]:not([aria-disabled="true"]), select:not(:disabled) { cursor: pointer; }
+}
+
+@layer utilities {
+  .font-display { font-family: var(--font-display); }
+  .text-balance { text-wrap: balance; }
+}
+
+.itq-shell { min-height: 100vh; width: 100%; min-width: 0; align-items: stretch; background: radial-gradient(circle at 85% -15%, rgba(91, 211, 188, .13), transparent 28%), #f4f7f7; }
+.itq-sidebar { min-width: 0; background: #082530; color: #d7e9e6; }
+.itq-grid { width: 100%; min-width: 0; overflow-x: hidden; background-image: linear-gradient(rgba(9, 77, 75, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(9, 77, 75, .035) 1px, transparent 1px); background-size: 28px 28px; }
+.card-lift { transition: transform .18s cubic-bezier(.23,1,.32,1), box-shadow .18s cubic-bezier(.23,1,.32,1), border-color .18s ease; }
+.card-lift:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(21, 59, 64, .09); border-color: rgba(22,165,140,.35); }
+.btn-press { transition: transform .16s cubic-bezier(.23,1,.32,1), box-shadow .16s ease, background-color .16s ease; }
+.btn-press:active { transform: scale(.97); }
+.fade-up { animation: fade-up .36s cubic-bezier(.23,1,.32,1) both; }
+@keyframes fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.table-row { transition: background-color .15s ease; }
+.table-row:hover { background: #f4faf8; }
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #c6d5d2; border-radius: 99px; }
+.scrollbar-thin { scrollbar-color: #c6d5d2 transparent; scrollbar-width: thin; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+html, body, button, input, select, textarea { font-size: 13px; }
+.icon-3d { box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 8px 18px rgba(8,37,48,.14); transform: translateY(0); transition: transform .18s ease, box-shadow .18s ease; }
+.icon-3d:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 12px 24px rgba(8,37,48,.18); }
+
+
+/* Authentication layout: independent from the application shell. */
+.itq-auth-shell{width:100%;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 82% 8%,rgba(91,211,188,.16),transparent 30%),linear-gradient(135deg,#f4f8f7 0%,#edf5f2 100%);box-sizing:border-box;}
+.itq-login-card{width:min(1120px,100%);min-height:620px;display:grid;grid-template-columns:minmax(320px,.82fr) minmax(420px,1.18fr);overflow:hidden;border:1px solid rgba(8,37,48,.08);border-radius:28px;background:#fff;box-shadow:0 24px 80px rgba(8,37,48,.16);}
+.itq-login-brand{display:flex;min-width:0;flex-direction:column;justify-content:space-between;background:#082530;padding:38px;color:#fff;}
+.itq-login-brand-copy{max-width:430px;padding-top:40px;}
+.itq-login-brand-copy p{margin:0;color:#9be9cd;font-size:11px;font-weight:800;letter-spacing:.18em;}
+.itq-login-brand-copy h1{margin:16px 0 18px;font-family:var(--font-display);font-size:clamp(28px,4vw,48px);white-space:nowrap;line-height:1.02;font-weight:700;letter-spacing:-.03em;}
+.itq-login-brand-copy span{display:block;color:#a8c3c4;font-size:13px;line-height:1.9;max-width:420px;}
+.itq-login-form-panel{display:flex;min-width:0;flex-direction:column;justify-content:center;padding:clamp(30px,5vw,72px);background:#fff;}
+.itq-login-heading p{margin:22px 0 0;color:#087f72;font-size:11px;font-weight:800;letter-spacing:.18em;}
+.itq-login-heading h2{margin:8px 0 0;font-family:var(--font-display);font-size:36px;line-height:1.1;font-weight:700;color:#17363e;}
+.itq-login-heading span{display:block;margin-top:10px;color:#708087;font-size:13px;line-height:1.6;}
+.itq-login-form{display:grid;gap:18px;margin-top:32px;width:min(430px,100%);}
+@media (max-width:900px){.itq-auth-shell{padding:16px}.itq-login-card{grid-template-columns:1fr;min-height:auto;max-width:620px}.itq-login-brand{min-height:230px;padding:28px}.itq-login-brand-copy{padding-top:34px}.itq-login-brand-copy h1{font-size:40px}.itq-login-form-panel{padding:34px 28px 40px}.itq-login-form{width:100%}}
+@media (max-width:520px){.itq-auth-shell{padding:0;align-items:stretch}.itq-login-card{width:100%;min-height:100dvh;border:0;border-radius:0;box-shadow:none}.itq-login-brand{min-height:210px;padding:22px}.itq-login-brand-copy{padding-top:26px}.itq-login-brand-copy h1{font-size:28px;white-space:nowrap}.itq-login-brand-copy span{font-size:12px;line-height:1.65}.itq-login-form-panel{padding:30px 20px 34px}.itq-login-heading h2{font-size:30px}}
+
+@media (min-width: 1024px) {
+  .itq-shell {
+    display: grid;
+    grid-template-columns: 310px minmax(0, 1fr);
+  }
+  .itq-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 310px;
+  }
+  .itq-shell > main {
+    min-width: 0;
+    min-height: 100vh;
+  }
+}
+
+@media (max-width: 1023px) {
+  .itq-shell > main {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* v7 responsive layout hardening */
+.itq-shell, .itq-shell > main, .itq-grid, .itq-grid > div { min-width: 0; }
+.itq-grid > div { width: 100%; }
+.itq-grid table { max-width: 100%; }
+.itq-grid input, .itq-grid select, .itq-grid textarea, .itq-grid button { max-width: 100%; }
+@media (max-width: 767px) {
+  .itq-grid { padding-top: 1rem; padding-bottom: 1rem; }
+  .itq-grid h1 { font-size: 1.65rem; line-height: 1.2; }
+  .itq-grid .min-w-\[900px\], .itq-grid .min-w-\[1000px\], .itq-grid .min-w-\[1050px\] { min-width: 720px; }
+}
+
+/* v18 responsive hardening: prevent right-side panels/tables from expanding the page. */
+.itq-grid > div,
+.itq-grid section,
+.itq-grid article,
+.itq-grid .grid,
+.itq-grid .flex { min-width: 0; }
+.itq-grid .overflow-x-auto { max-width: 100%; }
+.itq-grid table { width: 100%; }
+@media (max-width: 1199px) {
+  .itq-grid { padding-left: 1rem; padding-right: 1rem; }
+  .itq-grid .grid.lg\:grid-cols-\[\.8fr_1\.2fr\] { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 767px) {
+  .itq-grid .min-w-\[900px\],
+  .itq-grid .min-w-\[980px\],
+  .itq-grid .min-w-\[1000px\],
+  .itq-grid .min-w-\[1100px\],
+  .itq-grid .min-w-\[1120px\],
+  .itq-grid .min-w-\[1150px\] { min-width: 760px; }
+}
+
+/* V19.5 modal/layout hardening */
+.itq-modal-safe, .itq-modal-safe * { box-sizing: border-box; }
+
+
+/* v19.28: subtle pointer-reactive lighting inspired by modern interactive landing pages */
+.itq-interactive-surface{position:relative;isolation:isolate;--pointer-x:50%;--pointer-y:50%;}
+.itq-interactive-surface:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(520px circle at var(--pointer-x) var(--pointer-y),rgba(116,238,198,.16),transparent 68%);transition:background-position .12s ease; border-radius:inherit;}
+.itq-auth-shell{overflow:hidden;background:radial-gradient(700px circle at var(--pointer-x) var(--pointer-y),rgba(84,210,174,.16),transparent 70%),linear-gradient(135deg,#edf6f3 0%,#f7faf9 48%,#e8f3f1 100%);}
+.itq-login-card{transition:box-shadow .25s ease,border-color .2s ease;box-shadow:0 28px 90px rgba(8,37,48,.17),0 0 0 1px rgba(255,255,255,.7);}
+.itq-login-brand{position:relative;overflow:hidden;}
+.itq-login-brand:after{content:"";position:absolute;inset:-35%;pointer-events:none;background:radial-gradient(circle at var(--pointer-x,50%) var(--pointer-y,50%),rgba(191,245,221,.17),transparent 34%);transition:opacity .15s ease-out;}
+.itq-interactive-surface .card-lift{transition:transform .2s cubic-bezier(.23,1,.32,1),box-shadow .2s ease,border-color .2s ease;}
+.itq-interactive-surface .card-lift:hover{transform:translateY(-4px) scale(1.008);box-shadow:0 18px 36px rgba(21,59,64,.12);border-color:rgba(22,165,140,.5);}
+@media (prefers-reduced-motion:reduce){.itq-interactive-surface:before,.itq-login-card,.itq-interactive-surface .card-lift{transition:none!important;transform:none!important}}
+
+/* v19.32: full-viewport antigravity particle field with smooth cursor repulsion. */
+.itq-particle-field{position:fixed;inset:0;display:block;width:100vw;height:100vh;z-index:40;pointer-events:none;opacity:.76;mix-blend-mode:multiply;contain:strict}
+.itq-interactive-surface>*:not(.itq-particle-field){position:relative;z-index:1}
+.itq-auth-shell>.itq-particle-field{position:fixed;inset:0;z-index:40;pointer-events:none;mix-blend-mode:multiply}
+.itq-auth-shell>.itq-login-card{position:relative;z-index:39;pointer-events:auto}
+@media(prefers-reduced-motion:reduce){.itq-particle-field{display:none}}
