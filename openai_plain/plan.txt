@@ -1,0 +1,5 @@
+Project Plan:
+- Step 1: Setup repo
+- Step 2: Claude generates code
+- Step 3: ChatGPT builds database
+- Step 4: Gemini runs tests
