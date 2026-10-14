@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python 3.10
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -53,6 +53,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add task_spec.json generated_app/ antigravity_report.md
+          git add task_spec.json generated_app/ antigravity_report.md || true
           git commit -m "Auto-generated app and test reports via Multi-AI Pipeline" || echo "No changes to commit"
           git push
