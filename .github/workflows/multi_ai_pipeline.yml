@@ -1,0 +1,58 @@
+name: Multi-AI App Generation Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      user_prompt:
+        description: 'Nhập yêu cầu tạo ứng dụng/task cho Gemini:'
+        required: true
+        default: 'Tạo ứng dụng Web Todo List đơn giản dùng HTML, CSS và JavaScript.'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install google-generativeai openai requests
+
+      # Bước 1: Gemini tiếp nhận Task & Phân tích
+      - name: Step 1 - Gemini Orchestrator
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          USER_PROMPT: ${{ github.event.inputs.user_prompt }}
+        run: python gemini_tester/orchestrator.py
+
+      # Bước 2: Vibe Coding (ChatGPT -> Grok -> DeepSeek -> Manus)
+      - name: Step 2 - Multi-LLM Vibe Coding (With Fallback)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          MANUS_API_KEY: ${{ secrets.MANUS_API_KEY }}
+        run: python openai_plain/vibe_coder.py
+
+      # Bước 3: Antigravity Kiểm thử & Xuất Báo cáo về Gemini
+      - name: Step 3 - Antigravity Test & Report
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python antigravity/test_runner.py
+
+      # Bước 4: Tự động Commit Code & Báo cáo mới lên GitHub Repo
+      - name: Commit and Push Generated Artifacts
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add task_spec.json generated_app/ antigravity_report.md
+          git commit -m "Auto-generated app and test reports via Multi-AI Pipeline" || echo "No changes to commit"
+          git push
