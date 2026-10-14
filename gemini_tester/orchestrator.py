@@ -1,6 +1,6 @@
 import os
 import json
-import google.generativeai as genai
+from google import genai
 
 # Lấy GEMINI_API_KEY từ biến môi trường
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
@@ -8,11 +8,11 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise ValueError("❌ LỖI: Chưa cấu hình GEMINI_API_KEY trong GitHub Secrets!")
 
-genai.configure(api_key=GEMINI_API_KEY)
+# Khởi tạo client chuẩn theo thư viện mới google-genai
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 def create_task_spec(user_prompt):
-    # Sử dụng model gemini-1.5-flash chuẩn và ổn định
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    print("🤖 Gemini đang phân tích yêu cầu công việc...")
     
     prompt = f"""
     Bạn là Cổng điều phối trung tâm (Orchestrator). Hãy phân tích yêu cầu công việc sau đây và tạo ra danh sách chi tiết các yêu cầu kỹ thuật (Technical Specifications) để các AI lập trình thực hiện.
@@ -27,7 +27,12 @@ def create_task_spec(user_prompt):
     - "files_to_generate": Danh sách các file code cần tạo
     """
     
-    response = model.generate_content(prompt)
+    # Sử dụng model gemini-2.5-flash hoặc gemini-2.5-pro chuẩn mới nhất
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+    )
+    
     print("Gemini Orchestrator Response:")
     print(response.text)
     
