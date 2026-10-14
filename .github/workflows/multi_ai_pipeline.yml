@@ -1,40 +1,58 @@
-import os
-import json
-import google.generativeai as genai
+name: Multi-AI App Generation Pipeline
 
-# Lấy GEMINI_API_KEY từ biến môi trường
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+on:
+  workflow_dispatch:
+    inputs:
+      user_prompt:
+        description: 'Nhập yêu cầu tạo ứng dụng/task cho Gemini:'
+        required: true
+        default: 'Tạo ứng dụng Web Todo List đơn giản dùng HTML, CSS và JavaScript.'
 
-if not GEMINI_API_KEY:
-    raise ValueError("❌ LỖI: Chưa cấu hình GEMINI_API_KEY trong GitHub Secrets!")
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
 
-genai.configure(api_key=GEMINI_API_KEY)
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
 
-def create_task_spec(user_prompt):
-    # Sử dụng model gemini-1.5-flash chuẩn và ổn định
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    
-    prompt = f"""
-    Bạn là Cổng điều phối trung tâm (Orchestrator). Hãy phân tích yêu cầu công việc sau đây và tạo ra danh sách chi tiết các yêu cầu kỹ thuật (Technical Specifications) để các AI lập trình thực hiện.
-    
-    Yêu cầu công việc:
-    "{user_prompt}"
-    
-    Trả về định dạng JSON thuần túy gồm:
-    - "app_name": Tên ứng dụng
-    - "description": Mô tả ứng dụng
-    - "features": Danh sách tính năng chính
-    - "files_to_generate": Danh sách các file code cần tạo
-    """
-    
-    response = model.generate_content(prompt)
-    print("Gemini Orchestrator Response:")
-    print(response.text)
-    
-    # Lưu kết quả phân tích thành file spec
-    with open("task_spec.json", "w", encoding="utf-8") as f:
-        f.write(response.text)
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-if __name__ == "__main__":
-    prompt = os.environ.get("USER_PROMPT", "Tạo một ứng dụng Web Todo List bằng HTML, CSS, JS thuần.")
-    create_task_spec(prompt)
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install google-generativeai openai requests
+
+      # Bước 1: Gemini tiếp nhận Task & Phân tích
+      - name: Step 1 - Gemini Orchestrator
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          USER_PROMPT: ${{ github.event.inputs.user_prompt }}
+        run: python gemini_tester/orchestrator.py
+
+      # Bước 2: Vibe Coding (ChatGPT -> Grok -> DeepSeek -> Manus)
+      - name: Step 2 - Multi-LLM Vibe Coding (With Fallback)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          MANUS_API_KEY: ${{ secrets.MANUS_API_KEY }}
+        run: python openai_plain/vibe_coder.py
+
+      # Bước 3: Antigravity Kiểm thử & Xuất Báo cáo về Gemini
+      - name: Step 3 - Antigravity Test & Report
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python antigravity/test_runner.py
+
+      # Bước 4: Tự động Commit Code & Báo cáo mới lên GitHub Repo
+      - name: Commit and Push Generated Artifacts
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add task_spec.json generated_app/ antigravity_report.md || true
+          git commit -m "Auto-generated app and test reports via Multi-AI Pipeline" || echo "No changes to commit"
+          git push
