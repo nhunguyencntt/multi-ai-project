@@ -2,8 +2,12 @@ import os
 import json
 import google.generativeai as genai
 
-# Cấu hình Gemini API Key từ môi trường
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+# Hỗ trợ lấy từ cả GEMINI_API_KEY hoặc GOOGLE_API_KEY
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+
+if not GEMINI_API_KEY:
+    raise ValueError("❌ LỖI: Chưa cấu hình GEMINI_API_KEY trong GitHub Secrets hoặc biến môi trường bị trống!")
+
 genai.configure(api_key=GEMINI_API_KEY)
 
 def create_task_spec(user_prompt):
