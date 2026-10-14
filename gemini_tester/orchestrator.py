@@ -2,16 +2,17 @@ import os
 import json
 import google.generativeai as genai
 
-# Hỗ trợ lấy từ cả GEMINI_API_KEY hoặc GOOGLE_API_KEY
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+# Lấy GEMINI_API_KEY từ biến môi trường
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if not GEMINI_API_KEY:
-    raise ValueError("❌ LỖI: Chưa cấu hình GEMINI_API_KEY trong GitHub Secrets hoặc biến môi trường bị trống!")
+    raise ValueError("❌ LỖI: Chưa cấu hình GEMINI_API_KEY trong GitHub Secrets!")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
 def create_task_spec(user_prompt):
-    model = genai.GenerativeModel('gemini-1.5-pro')
+    # Sử dụng model gemini-1.5-flash chuẩn và ổn định
+    model = genai.GenerativeModel('gemini-1.5-flash')
     
     prompt = f"""
     Bạn là Cổng điều phối trung tâm (Orchestrator). Hãy phân tích yêu cầu công việc sau đây và tạo ra danh sách chi tiết các yêu cầu kỹ thuật (Technical Specifications) để các AI lập trình thực hiện.
