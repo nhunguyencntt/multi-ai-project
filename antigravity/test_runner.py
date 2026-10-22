@@ -29,7 +29,7 @@ def run_antigravity_tests():
     
     summary_prompt = f"Hãy tổng hợp kết quả báo cáo kiểm thử sau và đưa ra đánh giá ngắn gọn cho người dùng:\n{report_content}"
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.8-flash",
         contents=summary_prompt,
     )
     
