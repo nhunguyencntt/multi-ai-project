@@ -27,9 +27,9 @@ def create_task_spec(user_prompt):
     - "files_to_generate": Danh sách các file code cần tạo
     """
     
-    # Sử dụng model gemini-2.5-flash hoặc gemini-2.5-pro chuẩn mới nhất
+    # Sử dụng model gemini-3.8-flash hoặc gemini-3.8-pro chuẩn mới nhất
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.8-flash",
         contents=prompt,
     )
     
